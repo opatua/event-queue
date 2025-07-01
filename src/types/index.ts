@@ -8,7 +8,8 @@ export interface Event {
   id: string;
   name: string;
   description: string;
-  dateTime: Date;
+  startDateTime: Date;
+  endDateTime: Date;
   capacity: number;
   registered: Attendee[];
   queue: Attendee[];

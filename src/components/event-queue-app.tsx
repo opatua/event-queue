@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { Skeleton } from "./ui/skeleton"
+import { format } from "date-fns"
 
 interface EventQueueAppProps {
   eventId: string;
@@ -75,7 +76,7 @@ export function EventQueueApp({ eventId, isAdmin = false }: EventQueueAppProps) 
     )
   }
   
-  const { name, description, dateTime, capacity, registered, queue } = event;
+  const { name, description, startDateTime, endDateTime, capacity, registered, queue } = event;
 
   return (
     <div className="container mx-auto p-4 sm:p-6 md:p-8 font-body">
@@ -84,7 +85,7 @@ export function EventQueueApp({ eventId, isAdmin = false }: EventQueueAppProps) 
         <p className="text-muted-foreground mt-2 text-lg">{description}</p>
         <div className="flex items-center justify-center text-sm text-muted-foreground mt-4">
             <Calendar className="mr-2 h-4 w-4" />
-            <span>{dateTime.toLocaleString()}</span>
+            <span>{format(startDateTime, 'PPP')} &middot; {format(startDateTime, 'p')} to {format(endDateTime, 'p')}</span>
         </div>
       </header>
       

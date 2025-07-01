@@ -22,9 +22,19 @@ const eventFormSchema = z.object({
   name: z.string().min(3, { message: "Event name must be at least 3 characters." }),
   description: z.string().min(10, { message: "Description must be at least 10 characters." }),
   date: z.date({ required_error: "A date is required." }),
-  time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: "Invalid time format. Use HH:MM." }),
+  startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: "Invalid time format. Use HH:MM." }),
+  endTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: "Invalid time format. Use HH:MM." }),
   capacity: z.coerce.number().int().min(1, { message: "Capacity must be at least 1." }),
-})
+}).refine(data => {
+    if (data.startTime && data.endTime) {
+        return data.endTime > data.startTime;
+    }
+    return true;
+}, {
+    message: "End time must be after start time.",
+    path: ["endTime"],
+});
+
 
 type EventFormValues = z.infer<typeof eventFormSchema>
 
@@ -38,20 +48,27 @@ export function CreateEventForm() {
     defaultValues: {
       name: "",
       description: "",
-      time: "10:00",
+      startTime: "10:00",
+      endTime: "11:00",
       capacity: 50,
     },
   })
 
   const onSubmit = (data: EventFormValues) => {
-    const [hours, minutes] = data.time.split(':').map(Number)
-    const dateTime = new Date(data.date)
-    dateTime.setHours(hours, minutes)
+    const [startHours, startMinutes] = data.startTime.split(':').map(Number)
+    const startDateTime = new Date(data.date)
+    startDateTime.setHours(startHours, startMinutes)
+
+    const [endHours, endMinutes] = data.endTime.split(':').map(Number)
+    const endDateTime = new Date(data.date)
+    endDateTime.setHours(endHours, endMinutes)
+
 
     const eventData: Omit<Event, 'id' | 'registered' | 'queue'> = {
       name: data.name,
       description: data.description,
-      dateTime,
+      startDateTime,
+      endDateTime,
       capacity: data.capacity,
     }
 
@@ -95,7 +112,7 @@ export function CreateEventForm() {
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <FormField
               control={form.control}
               name="date"
@@ -133,10 +150,23 @@ export function CreateEventForm() {
             />
             <FormField
               control={form.control}
-              name="time"
+              name="startTime"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Event Time</FormLabel>
+                  <FormLabel>Start Time</FormLabel>
+                  <FormControl>
+                    <Input type="time" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="endTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>End Time</FormLabel>
                   <FormControl>
                     <Input type="time" {...field} />
                   </FormControl>

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useEventContext } from "@/context/EventContext"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Users, Calendar, ArrowRight, ClipboardCopy, Trash2 } from "lucide-react"
+import { Plus, Users, Calendar, ArrowRight, ClipboardCopy, Trash2, Clock } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import {
   AlertDialog,
@@ -17,6 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { format } from "date-fns"
 
 export default function Home() {
   const { events, deleteEvent } = useEventContext()
@@ -85,7 +86,11 @@ export default function Home() {
               <CardContent className="flex-grow">
                 <div className="flex items-center text-sm text-muted-foreground mb-2">
                   <Calendar className="mr-2 h-4 w-4" />
-                  <span>{event.dateTime.toLocaleString()}</span>
+                  <span>{format(event.startDateTime, "PPP")}</span>
+                </div>
+                <div className="flex items-center text-sm text-muted-foreground mb-2">
+                  <Clock className="mr-2 h-4 w-4" />
+                  <span>{format(event.startDateTime, "p")} - {format(event.endDateTime, "p")}</span>
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Users className="mr-2 h-4 w-4" />
