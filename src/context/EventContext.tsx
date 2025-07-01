@@ -12,6 +12,7 @@ interface EventContextType {
   queue: Attendee[];
   addAttendee: (name: string, participants: number) => void;
   removeAttendee: (id: string) => void;
+  removeQueuedAttendee: (id: string) => void;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -74,6 +75,18 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         variant: "destructive"
     });
   };
+
+  const removeQueuedAttendee = (id: string) => {
+    const attendeeToRemove = queue.find(a => a.id === id);
+    if (!attendeeToRemove) return;
+    
+    setQueue((prev) => prev.filter((attendee) => attendee.id !== id));
+    toast({
+        title: "Attendee Removed from Queue",
+        description: `${attendeeToRemove.name} has been removed from the queue.`,
+        variant: "destructive"
+    });
+  };
   
   const processQueue = useCallback(() => {
     if (registered.length < capacity && queue.length > 0) {
@@ -111,7 +124,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [registered, capacity, queue, processQueue]);
 
   return (
-    <EventContext.Provider value={{ capacity, setCapacity, registered, queue, addAttendee, removeAttendee }}>
+    <EventContext.Provider value={{ capacity, setCapacity, registered, queue, addAttendee, removeAttendee, removeQueuedAttendee }}>
       {children}
     </EventContext.Provider>
   );

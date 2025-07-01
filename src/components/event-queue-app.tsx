@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from 'next/link';
-import { Plus, Users, FileDown, Eye, Shield } from "lucide-react"
+import { Plus, Users, FileDown, Eye } from "lucide-react"
 import { useEventContext } from "@/context/EventContext"
 import { AddAttendeeDialog } from "@/components/add-attendee-dialog"
 import { AttendeeTable } from "@/components/attendee-table"
@@ -18,7 +18,7 @@ interface EventQueueAppProps {
 }
 
 export function EventQueueApp({ isAdmin = false }: EventQueueAppProps) {
-  const { capacity, setCapacity, registered, queue, addAttendee, removeAttendee } = useEventContext()
+  const { capacity, setCapacity, registered, queue, addAttendee, removeAttendee, removeQueuedAttendee } = useEventContext()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
 
@@ -96,23 +96,16 @@ export function EventQueueApp({ isAdmin = false }: EventQueueAppProps) {
                 <CardTitle>Attendee Lists</CardTitle>
                 <CardDescription>View registered and queued participants for your event.</CardDescription>
             </div>
-            <div>
-                {isAdmin ? (
+            {isAdmin && (
+                <div>
                     <Link href="/attendee" passHref>
                         <Button variant="outline">
                             <Eye className="mr-2 h-4 w-4" />
                             Attendee View
                         </Button>
                     </Link>
-                ) : (
-                    <Link href="/" passHref>
-                        <Button variant="outline">
-                            <Shield className="mr-2 h-4 w-4" />
-                            Admin View
-                        </Button>
-                    </Link>
-                )}
-            </div>
+                </div>
+            )}
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="registered">
@@ -130,6 +123,7 @@ export function EventQueueApp({ isAdmin = false }: EventQueueAppProps) {
             <TabsContent value="queue" className="mt-4">
               <AttendeeTable
                 attendees={queue}
+                onRemove={isAdmin ? removeQueuedAttendee : undefined}
                 caption="A list of participants waiting for a spot."
               />
             </TabsContent>

@@ -37,6 +37,8 @@ export function AttendeeTable({ attendees, onRemove, caption }: AttendeeTablePro
       : "The queue is currently empty.";
     return <p className="text-center text-muted-foreground py-12">{emptyMessage}</p>
   }
+
+  const isRegisteredTable = caption.includes("registered");
   
   return (
     <div className="border rounded-lg overflow-hidden">
@@ -69,7 +71,8 @@ export function AttendeeTable({ attendees, onRemove, caption }: AttendeeTablePro
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action will remove <strong>{attendee.name}</strong> from the registered list. If there are participants in the queue, the first one will take this spot.
+                          This action will remove <strong>{attendee.name}</strong> from the {isRegisteredTable ? "registered list" : "queue"}.
+                          {isRegisteredTable && " If there are participants in the queue, the first one will take this spot."}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
