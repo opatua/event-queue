@@ -46,7 +46,6 @@ export function AttendeeTable({ attendees, onRemove, caption }: AttendeeTablePro
           <TableRow>
             <TableHead className="w-[80px]">#</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
             <TableHead>Registration Time</TableHead>
             {onRemove && <TableHead className="text-right w-[100px]">Actions</TableHead>}
           </TableRow>
@@ -56,7 +55,6 @@ export function AttendeeTable({ attendees, onRemove, caption }: AttendeeTablePro
             <TableRow key={attendee.id} className="transition-all hover:bg-primary/10">
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{attendee.name}</TableCell>
-              <TableCell>{attendee.email}</TableCell>
               <TableCell>{attendee.registeredAt.toLocaleString()}</TableCell>
               {onRemove && (
                 <TableCell className="text-right">

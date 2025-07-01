@@ -23,11 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import type { Attendee } from "@/types"
 
 const attendeeSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
+  participants: z.coerce.number().int().min(1, { message: "Must add at least one participant." }),
 })
 
 type AttendeeFormValues = z.infer<typeof attendeeSchema>
@@ -36,7 +35,7 @@ interface AddAttendeeDialogProps {
   children: React.ReactNode
   open: boolean
   onOpenChange: (open: boolean) => void
-  onAddAttendee: (attendee: Omit<Attendee, "id" | "registeredAt">) => void
+  onAddAttendee: (name: string, participants: number) => void
 }
 
 export function AddAttendeeDialog({ children, open, onOpenChange, onAddAttendee }: AddAttendeeDialogProps) {
@@ -44,12 +43,12 @@ export function AddAttendeeDialog({ children, open, onOpenChange, onAddAttendee 
     resolver: zodResolver(attendeeSchema),
     defaultValues: {
       name: "",
-      email: "",
+      participants: 1,
     },
   })
 
   const onSubmit = (data: AttendeeFormValues) => {
-    onAddAttendee(data)
+    onAddAttendee(data.name, data.participants)
     form.reset()
   }
 
@@ -58,7 +57,7 @@ export function AddAttendeeDialog({ children, open, onOpenChange, onAddAttendee 
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Attendee</DialogTitle>
+          <DialogTitle>Add New Attendee(s)</DialogTitle>
           <DialogDescription>
             Enter the attendee's details. They will be registered or added to the queue automatically.
           </DialogDescription>
@@ -80,19 +79,19 @@ export function AddAttendeeDialog({ children, open, onOpenChange, onAddAttendee 
             />
             <FormField
               control={form.control}
-              name="email"
+              name="participants"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address</FormLabel>
+                  <FormLabel>Number of Participants</FormLabel>
                   <FormControl>
-                    <Input placeholder="john.doe@example.com" {...field} />
+                    <Input type="number" min="1" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground">Add Attendee</Button>
+              <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground">Add Attendee(s)</Button>
             </DialogFooter>
           </form>
         </Form>

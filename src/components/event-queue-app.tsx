@@ -19,24 +19,40 @@ export function EventQueueApp() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { toast } = useToast()
 
-  const handleAddAttendee = (attendee: Omit<Attendee, "id" | "registeredAt">) => {
-    const newAttendee: Attendee = {
-      ...attendee,
-      id: crypto.randomUUID(),
-      registeredAt: new Date(),
+  const handleAddAttendee = (name: string, participants: number) => {
+    const newAttendees: Attendee[] = []
+    for (let i = 1; i <= participants; i++) {
+        let finalName = name;
+        if (participants > 1) {
+            if (i > 1) {
+                finalName = `${name} ${i - 1}`;
+            }
+        }
+      
+        newAttendees.push({
+            name: finalName,
+            id: crypto.randomUUID(),
+            registeredAt: new Date(),
+        })
     }
 
-    if (registered.length < capacity) {
-      setRegistered((prev) => [...prev, newAttendee])
+    const availableSlots = capacity - registered.length
+    const toRegister = newAttendees.slice(0, availableSlots)
+    const toQueue = newAttendees.slice(availableSlots)
+
+    if (toRegister.length > 0) {
+      setRegistered((prev) => [...prev, ...toRegister])
       toast({
         title: "Success!",
-        description: `${newAttendee.name} has been registered.`,
+        description: `${toRegister.length} attendee(s) have been registered.`,
       })
-    } else {
-      setQueue((prev) => [...prev, newAttendee])
+    }
+    
+    if (toQueue.length > 0) {
+      setQueue((prev) => [...prev, ...toQueue])
       toast({
         title: "Event Full",
-        description: `${newAttendee.name} has been added to the queue.`,
+        description: `${toQueue.length} attendee(s) have been added to the queue.`,
       })
     }
     setIsDialogOpen(false)
@@ -55,10 +71,9 @@ export function EventQueueApp() {
   }
 
   const handleExport = () => {
-    const headers = ["Name", "Email", "Registered At"]
+    const headers = ["Name", "Registered At"]
     const rows = registered.map(att => [
       `"${att.name.replace(/"/g, '""')}"`,
-      `"${att.email.replace(/"/g, '""')}"`,
       `"${att.registeredAt.toLocaleString()}"`
     ].join(","))
 
@@ -128,7 +143,7 @@ export function EventQueueApp() {
            <CardContent className="pt-6 flex flex-col sm:flex-row items-center justify-around gap-4">
             <AddAttendeeDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} onAddAttendee={handleAddAttendee}>
               <Button size="lg" className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground">
-                <Plus className="mr-2" /> Add Attendee
+                <Plus className="mr-2" /> Add Attendee(s)
               </Button>
             </AddAttendeeDialog>
             <Button size="lg" variant="outline" onClick={handleExport} disabled={registered.length === 0} className="w-full sm:w-auto">
