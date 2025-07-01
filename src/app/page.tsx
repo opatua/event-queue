@@ -4,11 +4,22 @@ import Link from "next/link"
 import { useEventContext } from "@/context/EventContext"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Users, Calendar, ArrowRight, ClipboardCopy } from "lucide-react"
+import { Plus, Users, Calendar, ArrowRight, ClipboardCopy, Trash2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function Home() {
-  const { events } = useEventContext()
+  const { events, deleteEvent } = useEventContext()
   const { toast } = useToast()
 
   const handleShare = (eventId: string) => {
@@ -38,9 +49,38 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map(event => (
             <Card key={event.id} className="flex flex-col">
-              <CardHeader>
-                <CardTitle>{event.name}</CardTitle>
-                <CardDescription>{event.description}</CardDescription>
+              <CardHeader className="flex flex-row justify-between items-start">
+                <div>
+                    <CardTitle>{event.name}</CardTitle>
+                    <CardDescription>{event.description}</CardDescription>
+                </div>
+                 <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon" className="text-destructive/70 hover:text-destructive hover:bg-destructive/10 rounded-full flex-shrink-0 -mr-2 -mt-2">
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Delete event</span>
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently delete the 
+                          <strong className="px-1">{event.name}</strong> 
+                          event and all of its associated data.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={() => deleteEvent(event.id)}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
               </CardHeader>
               <CardContent className="flex-grow">
                 <div className="flex items-center text-sm text-muted-foreground mb-2">

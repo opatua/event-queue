@@ -32,6 +32,7 @@ interface EventContextType {
   events: Event[];
   getEventById: (id: string) => Event | undefined;
   addEvent: (event: Omit<Event, 'id' | 'registered' | 'queue'>) => Event;
+  deleteEvent: (eventId: string) => void;
   setEventCapacity: (eventId: string, capacity: number) => void;
   addAttendeeToEvent: (eventId: string, name: string, participants: number) => void;
   removeAttendeeFromEvent: (eventId: string, attendeeId: string) => void;
@@ -61,6 +62,18 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
     setEvents(prev => [...prev, newEvent]);
     return newEvent;
+  };
+
+  const deleteEvent = (eventId: string) => {
+    const eventToDelete = events.find(e => e.id === eventId);
+    if (eventToDelete) {
+        setEvents(prevEvents => prevEvents.filter(event => event.id !== eventId));
+        toast({
+            title: "Event Deleted",
+            description: `"${eventToDelete.name}" has been permanently removed.`,
+            variant: "destructive"
+        });
+    }
   };
 
   const setEventCapacity = (eventId: string, capacity: number) => {
@@ -187,7 +200,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [events, processQueues]);
 
   return (
-    <EventContext.Provider value={{ events, getEventById, addEvent, setEventCapacity, addAttendeeToEvent, removeAttendeeFromEvent, removeQueuedAttendeeFromEvent }}>
+    <EventContext.Provider value={{ events, getEventById, addEvent, deleteEvent, setEventCapacity, addAttendeeToEvent, removeAttendeeFromEvent, removeQueuedAttendeeFromEvent }}>
       {children}
     </EventContext.Provider>
   );
