@@ -11,6 +11,17 @@ import {
 import { Button } from "@/components/ui/button"
 import { Users, Calendar, Clock, ListPlus, Share2, CheckCircle, BarChart } from "lucide-react"
 
+const EQStringLogo = () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 100 100"
+      className="h-6 w-6 mr-2"
+      fill="currentColor"
+    >
+      <path d="M45 65C54.33 65 62.1667 61.6667 68.5 55H45V45H75V75H65V58.5C59.5 64.5 53 68.3333 45 70L40 60C41.6667 59.6667 43.3333 59.3333 45 59C48.3333 58.3333 51.1667 57 53.5 55H35V75H25V25H75V35H35V55H45C43.3333 56.3333 41.6667 57.3333 40 58L35 50C40.3333 45.6667 46.6667 42.5 54 41.5V25H85V45H95V20C95 18.8954 94.1046 18 93 18H15C13.8954 18 13 18.8954 13 20V80C13 81.1046 13.8954 82 15 82H40C41.6667 79 43.3333 76.3333 45 74V65Z" />
+    </svg>
+  );
+
 export function LandingPage() {
   const faqItems = [
     {
@@ -62,8 +73,8 @@ export function LandingPage() {
     <div className="flex flex-col min-h-screen">
       <header className="container mx-auto px-4 lg:px-6 h-16 flex items-center">
         <Link href="#" className="flex items-center justify-center font-bold text-xl" prefetch={false}>
-          <ListPlus className="h-6 w-6 mr-2" />
-          EventQueue
+          <EQStringLogo />
+          EQ
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link href="/dashboard" passHref>

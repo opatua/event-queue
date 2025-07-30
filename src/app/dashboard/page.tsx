@@ -36,7 +36,7 @@ export default function DashboardPage() {
     <div className="container mx-auto p-4 sm:p-6 md:p-8">
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
         <div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground/90">EventQueue Dashboard</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground/90">EQ Dashboard</h1>
           <p className="text-muted-foreground mt-2 text-lg">Manage your events or create a new one.</p>
         </div>
         <Link href="/events/new" passHref>
