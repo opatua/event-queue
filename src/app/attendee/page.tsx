@@ -1,7 +1,5 @@
-import { EventQueueApp } from '@/components/event-queue-app';
+import { redirect } from 'next/navigation';
 
 export default function AttendeePage() {
-  return (
-      <EventQueueApp isAdmin={false} />
-  );
+  redirect('/');
 }

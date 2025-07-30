@@ -18,7 +18,7 @@ export default function EventAdminPage() {
         <div className="container mx-auto text-center p-8">
             <h1 className="text-3xl font-bold">Event Not Found</h1>
             <p className="text-muted-foreground mt-2">The event you are looking for does not exist.</p>
-            <Link href="/" passHref>
+            <Link href="/dashboard" passHref>
                 <Button className="mt-4">Back to Dashboard</Button>
             </Link>
         </div>

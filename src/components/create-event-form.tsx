@@ -79,7 +79,7 @@ export function CreateEventForm() {
       description: `Successfully created "${newEvent.name}".`,
     })
 
-    router.push(`/events/${newEvent.id}`)
+    router.push(`/dashboard`)
   }
 
   return (

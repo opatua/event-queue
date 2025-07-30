@@ -17,7 +17,7 @@ export default function EventAttendeePage() {
             <h1 className="text-3xl font-bold">Event Not Found</h1>
             <p className="text-muted-foreground mt-2">The event link seems to be invalid.</p>
              <Link href="/" passHref>
-                <Button className="mt-4">View Available Events</Button>
+                <Button className="mt-4">Back to Home</Button>
             </Link>
         </div>
     )
